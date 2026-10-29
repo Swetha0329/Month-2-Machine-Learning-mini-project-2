@@ -1,0 +1,11 @@
+{
+  "dataset": "data\\phishshift_prepared.csv",
+  "total_messages": 17485,
+  "campaign_group_column": "campaign_group",
+  "unique_campaign_groups": 1,
+  "campaign_group_counts": {
+    "unknown_source_campaign": 17485
+  },
+  "status": "NOT SUITABLE for genuine campaign-separated evaluation",
+  "reason": "All messages use unknown_source_campaign; verified campaign identifiers are unavailable. Similarity-group evaluation is not equivalent to campaign-separated evaluation."
+}

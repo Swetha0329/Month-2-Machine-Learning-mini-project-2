@@ -1,0 +1,11 @@
+{
+  "metrics": {
+    "Accuracy": "99.11%",
+    "Precision": "98.55%",
+    "Recall": "99.08%",
+    "F1 Score": "98.81%"
+  },
+  "evaluation": "Stratified 80/20 hold-out evaluation",
+  "rows": 17485,
+  "evaluated_at": "2026-10-29T20:14:26.499340+05:30"
+}

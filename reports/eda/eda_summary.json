@@ -1,0 +1,155 @@
+{
+  "dataset_path": "G:\\phishshift\\data\\phishshift_prepared.csv",
+  "analysis_type": "exploratory_data_analysis",
+  "messages_analyzed": 17485,
+  "class_distribution": {
+    "legitimate": 10968,
+    "phishing": 6517
+  },
+  "class_percentages": {
+    "legitimate": 62.73,
+    "phishing": 37.27
+  },
+  "message_length_words": {
+    "overall_mean": 557.63,
+    "overall_median": 168.0,
+    "legitimate_mean": 699.1,
+    "phishing_mean": 319.54
+  },
+  "top_words": {
+    "legitimate": [
+      {
+        "word": "enron",
+        "count": 17840
+      },
+      {
+        "word": "language",
+        "count": 17218
+      },
+      {
+        "word": "university",
+        "count": 17162
+      },
+      {
+        "word": "which",
+        "count": 11921
+      },
+      {
+        "word": "subject",
+        "count": 11032
+      },
+      {
+        "word": "ect",
+        "count": 10902
+      },
+      {
+        "word": "information",
+        "count": 10771
+      },
+      {
+        "word": "mail",
+        "count": 10246
+      },
+      {
+        "word": "new",
+        "count": 10187
+      },
+      {
+        "word": "linguistics",
+        "count": 8960
+      },
+      {
+        "word": "other",
+        "count": 8482
+      },
+      {
+        "word": "conference",
+        "count": 8074
+      },
+      {
+        "word": "may",
+        "count": 7627
+      },
+      {
+        "word": "list",
+        "count": 7439
+      },
+      {
+        "word": "time",
+        "count": 7101
+      }
+    ],
+    "phishing": [
+      {
+        "word": "free",
+        "count": 4229
+      },
+      {
+        "word": "mail",
+        "count": 3784
+      },
+      {
+        "word": "money",
+        "count": 3752
+      },
+      {
+        "word": "company",
+        "count": 3719
+      },
+      {
+        "word": "information",
+        "count": 3674
+      },
+      {
+        "word": "business",
+        "count": 3431
+      },
+      {
+        "word": "only",
+        "count": 3207
+      },
+      {
+        "word": "time",
+        "count": 3170
+      },
+      {
+        "word": "now",
+        "count": 3146
+      },
+      {
+        "word": "report",
+        "count": 3055
+      },
+      {
+        "word": "new",
+        "count": 2921
+      },
+      {
+        "word": "click",
+        "count": 2791
+      },
+      {
+        "word": "make",
+        "count": 2619
+      },
+      {
+        "word": "order",
+        "count": 2589
+      },
+      {
+        "word": "over",
+        "count": 2541
+      }
+    ]
+  },
+  "charts": [
+    "01_class_distribution.png",
+    "02_message_length_distribution.png",
+    "03_top_words_by_class.png"
+  ],
+  "limitations": [
+    "Word frequency does not establish that a word is a phishing indicator.",
+    "Exploratory patterns do not prove causation.",
+    "The analysis reflects this dataset and may not represent all real-world messages."
+  ]
+}

@@ -1,0 +1,15 @@
+test_id,test_name,message,expected_label,predicted_label,result,test_time,passed,status,notes
+AT01,Legitimate password reset,"Your password reset request was received. If this was you, follow your company's normal process.",legitimate,phishing,REVIEW,2026-10-29T00:29:46,False,FAIL,FAIL: Legitimate password-reset message was classified as phishing; review false-positive behavior.
+AT02,Unfamiliar phishing wording,Your mailbox access is paused. Confirm your account immediately at http://example.invalid/verify,phishing,phishing,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+AT03a,Defanged URL,Review the shared document at hxxp://example[.]invalid/file,phishing,legitimate,REVIEW,2026-10-29T00:29:46,False,FAIL,FAIL: Defanged-URL phishing message was classified as legitimate; investigate URL/text robustness.
+AT03b,Punctuation variation,REVIEW!!! shared-document... access now,phishing,phishing,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP01,Harmless 1,The team meeting starts at 10 AM in the project room.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP02,Harmless 2,Your assignment feedback is available on the college portal.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP03,Harmless 3,Reminder: submit your internship attendance by Friday.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP04,Harmless 4,The library will close at 5 PM today.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP05,Harmless 5,Please review the presentation before tomorrow's meeting.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP06,Harmless 6,Your lab session has been moved to Room 204.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP07,Harmless 7,The department seminar begins at 2 PM.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+CP08,Harmless 8,Thank you for registering for the campus workshop.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+ERR01,Phishing example,URGENT: Verify your password immediately at http://example.invalid/login,phishing,phishing,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.
+ERR02,Legitimate example,Your college project review is scheduled for tomorrow at 10 AM. Bring your report.,legitimate,legitimate,PASS,2026-10-29T00:29:46,True,PASS,PASS: Predicted label matches the expected label for this test case.

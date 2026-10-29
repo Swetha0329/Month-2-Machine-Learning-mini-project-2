@@ -1,0 +1,130 @@
+[
+  {
+    "time": "2026-10-29 20:42:40",
+    "prediction": "Legitimate",
+    "risk_level": "Low",
+    "risk_score": 5,
+    "preview": "Hello team, our project review meeting is scheduled for tomorrow at 10 AM in the usual classroom. Please bring your project progress update."
+  },
+  {
+    "time": "2026-10-29 20:27:32",
+    "prediction": "Phishing",
+    "risk_level": "Medium",
+    "risk_score": 52,
+    "preview": "We received a request to reset your password. If you made this request, follow the instructions on the official website. If you did not requ"
+  },
+  {
+    "time": "2026-10-29 20:27:17",
+    "prediction": "Legitimate",
+    "risk_level": "Low",
+    "risk_score": 5,
+    "preview": "Dear candidate, your interview is scheduled for Thursday at 10 AM. Please bring an updated copy of your resume and your educational certific"
+  },
+  {
+    "time": "2026-10-29 20:27:05",
+    "prediction": "Phishing",
+    "risk_level": "Medium",
+    "risk_score": 64,
+    "preview": "We detected unusual activity on your account. Confirm your identity immediately by clicking the verification link. If you fail to verify wit"
+  },
+  {
+    "time": "2026-10-29 20:26:54",
+    "prediction": "Phishing",
+    "risk_level": "Medium",
+    "risk_score": 52,
+    "preview": "Congratulations! You have been selected for a work-from-home job with a salary of ₹8,000 per day. No experience is required. Register immedi"
+  },
+  {
+    "time": "2026-10-29 20:26:44",
+    "prediction": "Phishing",
+    "risk_level": "Medium",
+    "risk_score": 40,
+    "preview": "Dear customer, your account has been temporarily restricted. To restore access, reply with the OTP sent to your mobile number. Failure to re"
+  },
+  {
+    "time": "2026-10-29 20:26:32",
+    "prediction": "Phishing",
+    "risk_level": "Medium",
+    "risk_score": 52,
+    "preview": "Congratulations! You have won ₹5,00,000 in our lucky draw. Your prize will expire in 30 minutes. Click the link below and pay ₹999 as a proc"
+  },
+  {
+    "time": "2026-10-29 20:26:22",
+    "prediction": "Phishing",
+    "risk_level": "High",
+    "risk_score": 98,
+    "preview": "URGENT: Your bank account will be blocked today. Verify your account immediately at http://secure-bank-verify.example.com and enter your acc"
+  },
+  {
+    "time": "2026-10-29 20:25:33",
+    "prediction": "Phishing",
+    "risk_level": "High",
+    "risk_score": 76,
+    "preview": "URGENT: Your account will be suspended today! Verify your password immediately at hxxps://account-check.invalid/login to avoid losing access"
+  },
+  {
+    "time": "2026-10-29 20:25:19",
+    "prediction": "Legitimate",
+    "risk_level": "Low",
+    "risk_score": 5,
+    "preview": "Hello team, our project review meeting is scheduled for tomorrow at 10 AM in the usual classroom. Please bring your project progress update."
+  },
+  {
+    "time": "2026-10-29 20:25:12",
+    "prediction": "Phishing",
+    "risk_level": "High",
+    "risk_score": 76,
+    "preview": "URGENT: Your account will be suspended today! Verify your password immediately at hxxps://account-check.invalid/login to avoid losing access"
+  },
+  {
+    "id": "52bddc9a-6ce9-4c90-b059-84860271e514",
+    "timestamp": "2026-10-29T20:13:51+05:30",
+    "message_preview": "URGENT: Your account will be suspended today! Verify your password immediately at hxxps://account-check.invalid/login to…",
+    "message": "",
+    "classification": "Potentially suspicious",
+    "risk_level": "Medium",
+    "risk_score": 53
+  },
+  {
+    "time": "2026-10-29 20:02:09",
+    "prediction": "Legitimate",
+    "risk_score": 5,
+    "preview": "[Message content not saved]"
+  },
+  {
+    "time": "2026-10-29 20:02:00",
+    "prediction": "Phishing",
+    "risk_score": 76,
+    "preview": "[Message content not saved]"
+  },
+  {
+    "time": "2026-10-29 20:01:05",
+    "prediction": "Phishing",
+    "risk_score": 98,
+    "preview": "[Message content not saved]"
+  },
+  {
+    "time": "2026-10-29 19:55:57",
+    "prediction": "Phishing",
+    "risk_score": 98,
+    "preview": "[Message content not saved]"
+  },
+  {
+    "time": "2026-10-29 19:55:08",
+    "prediction": "Legitimate",
+    "risk_score": 5,
+    "preview": "[Message content not saved]"
+  },
+  {
+    "time": "2026-10-29 19:44:45",
+    "prediction": "Legitimate",
+    "risk_score": 5,
+    "preview": "[Message content not saved]"
+  },
+  {
+    "time": "2026-10-29 19:44:30",
+    "prediction": "Phishing",
+    "risk_score": 76,
+    "preview": "[Message content not saved]"
+  }
+]

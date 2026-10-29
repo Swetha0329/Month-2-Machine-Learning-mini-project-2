@@ -1,0 +1,28 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Test and tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db
+# Large PhishShift files - keep locally, do not upload
+data/phishshift_dataset.csv
+data/phishshift_prepared.csv
+data/dataset_progress.json
+models/random_forest.joblib

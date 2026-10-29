@@ -1,0 +1,18 @@
+{
+    "evaluation_type": "derived_similarity_group_holdout",
+    "note": "Uses the same grouping source and split settings as ML training. Similarity groups are not verified real-world campaign IDs.",
+    "messages_evaluated": 3576,
+    "training_messages": 13909,
+    "test_messages": 3576,
+    "overlapping_groups": 0,
+    "accuracy": 0.6121364653243848,
+    "precision_phishing": 0.5789473684210527,
+    "recall_phishing": 0.0546875,
+    "f1_phishing": 0.099935107073329,
+    "confusion_matrix": {
+        "true_negative": 2112,
+        "false_positive": 56,
+        "false_negative": 1331,
+        "true_positive": 77
+    }
+}

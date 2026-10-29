@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f8f9">
+<title>PhishShift | Message Risk Scanner</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    color-scheme: light;
+    --bg:#f7f8f9; --surface:#fff; --surface-2:#f0f3f2;
+    --text:#202824; --muted:#707b75; --border:#e1e7e3;
+    --green:#075e43; --green-bright:#13845c; --green-soft:#e2f3e9;
+    --red:#a31628; --red-dark:#690d1b; --red-soft:#fbe8eb;
+    --yellow:#e6a817; --shadow:0 18px 55px rgba(24,54,39,.075);
+    --heading-gradient:linear-gradient(100deg,#064e3b 0%,#087c52 30%,#7c343d 62%,#c21e36 82%,#690d1b 100%);
+}
+html[data-theme="dark"] {
+    color-scheme:dark;
+    --bg:#101612; --surface:#19211b; --surface-2:#222c24;
+    --text:#edf4ef; --muted:#a2b1a6; --border:#303d33;
+    --green:#67d5a1; --green-bright:#8ae5b6; --green-soft:#203d2e;
+    --red:#ff8190; --red-dark:#ff9ca7; --red-soft:#48252b;
+    --yellow:#f5cf69; --shadow:0 18px 55px rgba(0,0,0,.23);
+    --heading-gradient:linear-gradient(100deg,#68e0a8 0%,#25b981 30%,#ce6878 62%,#ff8190 82%,#ffb0b8 100%);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;min-height:100vh;
+    background:radial-gradient(ellipse at 0% 0%,rgba(19,132,92,.10),transparent 32%),
+    radial-gradient(ellipse at 100% 5%,rgba(163,22,40,.08),transparent 30%),var(--bg);
+    color:var(--text);font-family:"Inter",sans-serif;transition:background .25s,color .25s;
+}
+button,textarea{font:inherit}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--green-bright);outline-offset:3px}
+h1,h2,h3,h4,.card-title,.brand-caption,.eyebrow,.private-badge,.field-label,.detail-label,
+.samples-label,.system-status,.clear-button,.theme-toggle,.sample-button,.analyze-button,
+.section-heading,.stat-label,.clear-history{text-transform:uppercase}
+h1,h2,h3,h4,.card-title,.feature h3,.result-heading h2,.result-banner h3,.section-heading{
+    font-family:"Bebas Neue",sans-serif;font-weight:400;letter-spacing:1.5px;line-height:1.1;
+}
+.topbar{
+    min-height:78px;padding:12px 6%;display:flex;align-items:center;justify-content:space-between;
+    gap:16px;border-bottom:1px solid var(--border);background:var(--surface);
+    position:sticky;top:0;z-index:20;
+}
+.brand{display:flex;align-items:center;gap:12px;font-family:"Bebas Neue",sans-serif;font-size:30px;letter-spacing:1.2px;line-height:1}
+.brand-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:15px;color:white;font-size:25px;background:linear-gradient(145deg,#075e43,#13845c 50%,#a31628);box-shadow:0 6px 18px rgba(7,94,67,.20)}
+.brand .shift{color:var(--red)}
+.brand-caption{margin-top:5px;font-family:"Inter",sans-serif;font-size:9px;letter-spacing:1.6px;color:var(--muted);font-weight:800}
+.top-actions{display:flex;align-items:center;gap:17px}
+.system-status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.6px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#20a464;box-shadow:0 0 0 4px rgba(32,164,100,.10)}
+.theme-toggle{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:12px;padding:10px 14px;cursor:pointer;font-size:11px;font-weight:800;letter-spacing:.5px;display:flex;gap:8px;align-items:center;transition:.2s}
+.theme-toggle:hover{border-color:var(--green-bright);transform:translateY(-1px)}
+.container{width:min(1120px,90%);margin:auto}
+.hero{padding:70px 0 38px;text-align:center}
+.eyebrow{display:inline-flex;gap:9px;align-items:center;padding:9px 14px;border:1px solid var(--border);border-radius:30px;color:var(--green);background:var(--surface);font-size:10px;font-weight:800;letter-spacing:1.5px}
+html[data-theme="dark"] .eyebrow{color:var(--green-bright)}
+.hero h1{font-size:clamp(42px,6.5vw,82px);letter-spacing:1px;line-height:1.05;margin:25px auto 17px;max-width:950px}
+.headline-intro{display:inline-block;font-family:"Bebas Neue",sans-serif;letter-spacing:2px}
+.gradient-text{display:inline-block;padding-bottom:.05em;background:var(--heading-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.hero p{max-width:610px;margin:auto;color:var(--muted);font-size:13px;line-height:1.95}
+.color-line{display:flex;width:135px;height:4px;border-radius:5px;overflow:hidden;margin:27px auto 0}
+.color-line span{flex:1}
+.green{background:#13845c}.red{background:#a31628}.green-light{background:#58ad7e}.red-light{background:#d75a6b}
+.scanner-card,.result-card,.dashboard-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;
+}
+.scanner-card{max-width:850px;margin:12px auto 0}
+.card-top{padding:25px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:15px}
+.card-title{font-size:27px;letter-spacing:1.4px}
+.card-subtitle{font-size:11px;color:var(--muted);margin-top:5px}
+.private-badge{border-radius:9px;padding:9px 12px;color:var(--green);background:var(--green-soft);font-size:9px;font-weight:800;letter-spacing:.8px;white-space:nowrap}
+.scanner-body{padding:28px}
+.field-label{display:flex;justify-content:space-between;gap:10px;font-size:10px;font-weight:800;letter-spacing:1px;margin-bottom:12px}
+.field-label span:last-child{font-weight:600;letter-spacing:0;color:var(--muted);text-transform:none}
+textarea{display:block;width:100%;min-height:190px;resize:vertical;padding:20px;border-radius:15px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);line-height:1.9;font-size:13px;outline:none;transition:border .2s,box-shadow .2s}
+textarea::placeholder{color:var(--muted);opacity:.8}
+textarea:focus{border-color:var(--green-bright);box-shadow:0 0 0 4px rgba(19,132,92,.10)}
+.input-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;color:var(--muted);font-size:10px}
+.clear-button,.clear-history{border:0;background:transparent;color:var(--red);cursor:pointer;font-size:10px;font-weight:800;letter-spacing:.5px}
+.analyze-button{width:100%;margin-top:24px;min-height:55px;border:0;border-radius:13px;cursor:pointer;color:white;font-family:"Bebas Neue",sans-serif;font-size:21px;letter-spacing:1.5px;background:linear-gradient(105deg,#075e43 0%,#13845c 48%,#8d1828 100%);box-shadow:0 8px 22px rgba(7,94,67,.18);transition:transform .2s,box-shadow .2s}
+.analyze-button:hover{transform:translateY(-2px);box-shadow:0 12px 27px rgba(7,94,67,.24)}
+.analyze-button:disabled{opacity:.7;cursor:wait;transform:none}
+.samples{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:9px;margin:20px auto 0}
+.samples-label{font-size:9px;font-weight:800;letter-spacing:.7px;color:var(--muted);margin-right:3px}
+.sample-button{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:30px;padding:9px 12px;font-size:9px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.2s}
+.sample-button:hover{border-color:var(--green-bright);color:var(--green);background:var(--green-soft)}
+.result-section{max-width:850px;margin:30px auto 0;scroll-margin-top:100px}
+.result-heading{padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid var(--border)}
+.result-heading h2{font-size:30px;margin:0}
+.result-heading p{margin:6px 0 0;color:var(--muted);font-size:11px}
+.result-content{padding:27px 28px}
+.result-banner{padding:20px;border-radius:16px;display:flex;gap:16px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border)}
+.result-icon{width:47px;height:47px;display:grid;place-items:center;flex-shrink:0;border-radius:14px;font-size:23px;background:var(--green-soft)}
+.result-banner h3{font-size:25px;margin:2px 0 7px}
+.result-banner p{font-size:12px;line-height:1.8;color:var(--muted);margin:0;overflow-wrap:anywhere}
+.risk-red{border-color:rgba(163,22,40,.35)}.risk-red .result-icon{background:var(--red-soft)}.risk-red h3{color:var(--red)}
+.risk-green{border-color:rgba(19,132,92,.35)}.risk-green .result-icon{background:var(--green-soft)}.risk-green h3{color:var(--green)}
+.risk-yellow{border-color:rgba(230,168,23,.5)}.risk-yellow .result-icon{background:rgba(230,168,23,.15)}.risk-yellow h3{color:var(--yellow)}
+.result-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px}
+.detail-box{padding:18px;border:1px solid var(--border);background:var(--surface);border-radius:14px;min-width:0}
+.detail-label{color:var(--muted);font-size:9px;margin-bottom:9px;letter-spacing:.9px;font-weight:800}
+.detail-value{font-size:13px;font-weight:800;overflow-wrap:anywhere}
+.cue-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.cue{background:var(--green-soft);color:var(--green);border-radius:8px;padding:8px 11px;font-size:10px;font-weight:800;overflow-wrap:anywhere}
+.no-cues{color:var(--muted);font-size:11px;line-height:1.7}
+.notice{display:flex;align-items:flex-start;gap:11px;padding:15px 17px;border:1px solid var(--border);background:var(--surface-2);border-radius:13px;margin-top:20px;font-size:10px;line-height:1.9;color:var(--muted)}
+.notice strong{color:var(--text)}
+.risk-meter{height:9px;background:var(--surface-2);border-radius:10px;overflow:hidden;margin-top:12px}
+.risk-meter-fill{width:0;height:100%;border-radius:10px;transition:width .5s ease}
+.risk-meter-fill.high{background:var(--red)}.risk-meter-fill.medium{background:var(--yellow)}.risk-meter-fill.low{background:var(--green-bright)}
+.risk-meter-label{display:flex;justify-content:space-between;gap:10px;margin-top:17px;font-size:10px;font-weight:800}
+.url-list{display:grid;gap:8px;margin-top:12px}
+.url-entry{padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:11px;overflow-wrap:anywhere;color:var(--muted)}
+.section-heading{font-size:32px;margin:0}
+.section-subtitle{color:var(--muted);font-size:11px;line-height:1.8;margin:7px 0 0}
+.dashboard-section{margin:38px auto 0;scroll-margin-top:100px}
+.dashboard-title{margin-bottom:18px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.stat-card{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);min-width:0}
+.stat-label{color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.8px}
+.stat-value{margin-top:12px;font-size:30px;font-weight:800;line-height:1.1;overflow-wrap:anywhere}
+.stat-caption{margin-top:8px;color:var(--muted);font-size:10px;line-height:1.7}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-top:17px}
+.dashboard-card{padding:22px;min-width:0}
+.dashboard-card h3{font-size:24px;margin:0}
+.chart-wrap{position:relative;height:240px;margin-top:18px}
+.history-list{display:grid;gap:10px;margin-top:18px}
+.history-item{padding:13px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);min-width:0}
+.history-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.history-message{font-size:12px;line-height:1.7;overflow-wrap:anywhere;white-space:pre-wrap}
+.history-meta{color:var(--muted);font-size:10px;margin-top:7px;line-height:1.7}
+.history-badge{flex-shrink:0;border-radius:7px;padding:6px 8px;font-size:9px;font-weight:800;text-transform:uppercase}
+.history-badge.high{color:var(--red);background:var(--red-soft)}
+.history-badge.medium{color:#986900;background:rgba(230,168,23,.15)}
+.history-badge.low{color:var(--green);background:var(--green-soft)}
+html[data-theme="dark"] .history-badge.medium{color:var(--yellow)}
+.empty-history{padding:22px 0;text-align:center;color:var(--muted);font-size:11px;line-height:1.8}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+.metric-box{padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2)}
+.metric-value{font-size:23px;font-weight:800;overflow-wrap:anywhere}
+.metric-label{font-size:9px;color:var(--muted);font-weight:800;margin-top:6px}
+.model-note{font-size:10px;color:var(--muted);line-height:1.8;margin-top:17px}
+.feature-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:850px;margin:55px auto 0}
+.feature{padding:24px 21px;background:var(--surface);border:1px solid var(--border);border-radius:17px;transition:transform .2s,border-color .2s}
+.feature:hover{transform:translateY(-4px);border-color:var(--green-bright)}
+.feature-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:12px;background:var(--green-soft);font-size:20px;margin-bottom:18px}
+.feature:nth-child(2) .feature-icon{background:var(--red-soft)}
+.feature:nth-child(3) .feature-icon{background:rgba(230,168,23,.15)}
+.feature h3{font-size:22px;letter-spacing:1px;margin:0 0 8px}
+.feature p{font-size:11px;line-height:1.9;color:var(--muted);margin:0}
+footer{margin-top:65px;padding:27px 5%;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:10px;line-height:2}
+footer strong{color:var(--text);font-family:"Bebas Neue",sans-serif;font-size:22px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase}
+.footer-colors{display:flex;gap:4px;width:80px;height:3px;margin:0 auto 14px;border-radius:4px;overflow:hidden}
+.footer-colors span{flex:1}
+.toast{position:fixed;right:20px;bottom:20px;z-index:50;max-width:calc(100% - 40px);padding:13px 17px;border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);color:var(--text);font-size:12px;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:800px){
+    .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .dashboard-grid{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+    .topbar{min-height:70px;padding:12px 5%}
+    .brand{font-size:26px}.brand-icon{width:39px;height:39px}
+    .brand-caption,.system-status{display:none}
+    .theme-toggle{padding:9px 10px}
+    .container{width:92%}.hero{padding-top:46px}
+    .hero h1{font-size:clamp(38px,10vw,60px);letter-spacing:.5px}
+    .scanner-body,.result-content{padding:19px}
+    .card-top,.result-heading{padding:19px}
+    .private-badge{font-size:8px;padding:8px}
+    .feature-row{grid-template-columns:1fr;margin-top:35px}
+    .feature{display:flex;gap:15px;align-items:flex-start}
+    .feature-icon{flex-shrink:0;margin-bottom:0}
+    .result-details{grid-template-columns:1fr}
+    .input-bottom{align-items:flex-start}
+    textarea{min-height:170px}
+    .section-heading{font-size:28px}
+}
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon" aria-hidden="true">⌁</div>
+        <div>
+            <div>Phish<span class="shift">Shift</span></div>
+            <div class="brand-caption">MESSAGE RISK SCANNER</div>
+        </div>
+    </div>
+    <div class="top-actions">
+        <div class="system-status"><span class="status-dot"></span>Scanner interface ready</div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode">
+            <span id="themeIcon" aria-hidden="true">🌙</span>
+            <span id="themeText">Dark mode</span>
+        </button>
+    </div>
+</header>
+
+<main class="container">
+<section class="hero">
+    <div class="eyebrow"><span aria-hidden="true">✳</span> Smarter message awareness</div>
+    <h1><span class="headline-intro">EVERY MESSAGE HAS A SIGNAL.</span><br><span class="gradient-text">FIND THE THREAT.</span></h1>
+    <p>Analyze suspicious messages with machine learning and understandable risk indicators. Pause, inspect, and make a more informed decision before you trust a message.</p>
+    <div class="color-line" aria-hidden="true"><span class="green"></span><span class="green-light"></span><span class="red-light"></span><span class="red"></span></div>
+</section>
+
+{% set safe_stats = stats if stats is defined and stats else {} %}
+{% set safe_history = history if history is defined and history else [] %}
+{% set safe_metrics = metrics if metrics is defined and metrics else {} %}
+
+<section class="dashboard-section" aria-label="Dashboard statistics">
+    <div class="dashboard-title">
+        <h2 class="section-heading">SCANNER OVERVIEW</h2>
+        <p class="section-subtitle">A quick overview of recorded message scans.</p>
+    </div>
+    <div class="stats-grid">
+        <article class="stat-card">
+            <div class="stat-label">TOTAL SCANS</div>
+            <div class="stat-value" id="totalScans">{{ safe_stats.get('total_scans', safe_stats.get('total', safe_history|length)) }}</div>
+            <div class="stat-caption">Messages analysed</div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-label">PHISHING DETECTED</div>
+            <div class="stat-value" id="phishingCount">{{ safe_stats.get('phishing_count', safe_stats.get('phishing', 0)) }}</div>
+            <div class="stat-caption">Messages flagged as suspicious</div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-label">LEGITIMATE</div>
+            <div class="stat-value" id="legitimateCount">{{ safe_stats.get('legitimate_count', safe_stats.get('legitimate', 0)) }}</div>
+            <div class="stat-caption">Predicted as legitimate</div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-label">UNCERTAIN RESULTS</div>
+            <div class="stat-value" id="uncertainCount">{{ safe_stats.get('uncertain_count', safe_stats.get('uncertain', 0)) }}</div>
+            <div class="stat-caption">Require extra caution</div>
+        </article>
+    </div>
+</section>
+
+<section class="scanner-card" aria-labelledby="scannerTitle">
+    <div class="card-top">
+        <div>
+            <div class="card-title" id="scannerTitle">MESSAGE ANALYSIS</div>
+            <div class="card-subtitle">Paste the message you want to inspect</div>
+        </div>
+        <div class="private-badge">◇ MESSAGE SCANNER</div>
+    </div>
+    <div class="scanner-body">
+        <form method="POST" action="/" id="scannerForm">
+            <label class="field-label" for="message">
+                <span>MESSAGE CONTENT</span>
+                <span id="charCount">0 characters</span>
+            </label>
+            <textarea id="message" name="message" maxlength="20000" placeholder="Paste an email, SMS, or suspicious message here..." required>{{ message|default('', true) }}</textarea>
+            <div class="input-bottom">
+                <span>✦ Never share real passwords or sensitive information.</span>
+                <button class="clear-button" type="button" id="clearButton">CLEAR MESSAGE ↗</button>
+            </div>
+            <button class="analyze-button" type="submit" id="analyzeButton">
+                <span id="buttonText">✦ &nbsp; ANALYZE MESSAGE</span>
+            </button>
+        </form>
+        <div class="samples">
+            <span class="samples-label">TRY AN EXAMPLE:</span>
+            <button class="sample-button" type="button" data-sample="phishing">🔴 SUSPICIOUS MESSAGE</button>
+            <button class="sample-button" type="button" data-sample="legitimate">🟢 NORMAL MESSAGE</button>
+        </div>
+    </div>
+</section>
+
+{% if result is defined and result %}
+{% set classification = result.get('classification', result.get('predicted_class', 'Uncertain')) %}
+{% set predicted = result.get('predicted_class', '') %}
+{% set uncertain = result.get('is_uncertain', false) %}
+{% set risk_level = result.get('risk_level', 'Medium')|string %}
+{% set risk_lower = risk_level|lower %}
+{% set risk_class = 'high' if risk_lower in ['high','critical'] else ('medium' if risk_lower in ['medium','moderate'] else 'low') %}
+{% set score_value = result.get('risk_score', 0)|float %}
+{% set score_value = [0, [score_value, 100]|min]|max %}
+{% set cues = result.get('risk_cues', []) %}
+{% set urls = result.get('urls', []) %}
+
+<section class="result-section" id="results" aria-live="polite">
+    <div class="result-card">
+        <div class="result-heading">
+            <div>
+                <h2>ANALYSIS RESULTS</h2>
+                <p>Review the prediction and its risk indicators.</p>
+            </div>
+            <span class="private-badge">ANALYSIS COMPLETE</span>
+        </div>
+        <div class="result-content">
+            {% if uncertain or 'uncertain' in classification|lower %}
+                {% set result_style = 'risk-yellow' %}
+                {% set result_icon = '◈' %}
+            {% elif 'phish' in (classification ~ ' ' ~ predicted)|lower %}
+                {% set result_style = 'risk-red' %}
+                {% set result_icon = '⚠' %}
+            {% else %}
+                {% set result_style = 'risk-green' %}
+                {% set result_icon = '✓' %}
+            {% endif %}
+
+            <div class="result-banner {{ result_style }}">
+                <div class="result-icon" aria-hidden="true">{{ result_icon }}</div>
+                <div>
+                    <h3>{{ classification }}</h3>
+                    <p>{{ result.get('explanation', 'Review this result carefully and verify the message independently.') }}</p>
+                </div>
+            </div>
+
+            <div class="result-details">
+                <div class="detail-box">
+                    <div class="detail-label">RISK LEVEL</div>
+                    <div class="detail-value">{{ risk_level }}</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label">MODEL PREDICTION</div>
+                    <div class="detail-value">{{ predicted if predicted else classification }}</div>
+                </div>
+            </div>
+
+            <div class="detail-box" style="margin-top:16px">
+                <div class="risk-meter-label">
+                    <span>RISK SCORE</span><span>{{ score_value|round|int }} / 100</span>
+                </div>
+                <div class="risk-meter">
+                    <div id="riskMeterFill" class="risk-meter-fill {{ risk_class }}" data-score="{{ score_value }}"></div>
+                </div>
+            </div>
+
+            <div class="detail-box" style="margin-top:16px">
+                <div class="detail-label">DETECTED RISK INDICATORS</div>
+                {% if cues %}
+                <div class="cue-list">
+                    {% for cue in cues %}
+                    <span class="cue">{{ cue }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="no-cues">No configured risk indicators were detected. This does not prove the message is safe.</p>
+                {% endif %}
+            </div>
+
+            {% if urls %}
+            <div class="detail-box" style="margin-top:16px">
+                <div class="detail-label">URLS FOUND IN MESSAGE</div>
+                <div class="url-list">
+                    {% for url in urls %}
+                    <div class="url-entry">
+                        {% if url is mapping %}
+                            <strong>{{ url.get('url', '') }}</strong><br>
+                            Host: {{ url.get('host', 'Unknown host') }}<br>
+                            {{ url.get('indicators', [])|join(' · ') }}
+                        {% else %}
+                            {{ url }}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <p class="no-cues">Do not open suspicious links. Displaying a URL does not establish that it is safe.</p>
+            </div>
+            {% endif %}
+
+            <div class="notice">
+                <span aria-hidden="true">ⓘ</span>
+                <div><strong>STAY ALERT.</strong> This prediction is decision support, not a guarantee of safety. Verify unexpected requests through official channels.</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="dashboard-section" id="analytics">
+    <div class="dashboard-title">
+        <h2 class="section-heading">SCAN ANALYTICS</h2>
+        <p class="section-subtitle">Visual summaries of the recorded classifications.</p>
+    </div>
+    <div class="dashboard-grid">
+        <article class="dashboard-card">
+            <h3>CLASSIFICATION OVERVIEW</h3>
+            <p class="section-subtitle">Recorded phishing, legitimate and uncertain scans.</p>
+            <div class="chart-wrap"><canvas id="scanChart"></canvas></div>
+        </article>
+        <article class="dashboard-card">
+            <h3>RISK DISTRIBUTION</h3>
+            <p class="section-subtitle">Recorded scans grouped by high, medium and low risk.</p>
+            <div class="chart-wrap"><canvas id="riskChart"></canvas></div>
+        </article>
+    </div>
+</section>
+
+<section class="dashboard-section" id="history">
+    <div class="dashboard-title">
+        <h2 class="section-heading">RECENT SCAN HISTORY</h2>
+        <p class="section-subtitle">Review recent messages saved by the application.</p>
+    </div>
+    <article class="dashboard-card">
+        {% if safe_history %}
+        <div class="history-list">
+            {% for item in safe_history[:10] %}
+            {% set history_label = item.get('classification', item.get('predicted_class', item.get('label', 'Unknown')))|string %}
+            {% set history_risk = item.get('risk_level', 'low')|string|lower %}
+            {% set history_class = 'high' if history_risk in ['high','critical'] else ('medium' if history_risk in ['medium','moderate'] else 'low') %}
+            <div class="history-item">
+                <div class="history-top">
+                    <div class="history-message">{{ item.get('message', item.get('body_text', item.get('text', 'Message unavailable'))) }}</div>
+                    <span class="history-badge {{ history_class }}">{{ history_label }}</span>
+                </div>
+                <div class="history-meta">
+                    {{ item.get('timestamp', item.get('date', item.get('scanned_at', ''))) }}
+                    {% if item.get('risk_score') is not none %} · Risk score: {{ item.get('risk_score') }}{% endif %}
+                    {% if item.get('risk_level') %} · Risk level: {{ item.get('risk_level') }}{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-history">No saved scan history is available yet. Scan a message to begin.</div>
+        {% endif %}
+    </article>
+</section>
+
+<section class="dashboard-section" id="modelMetrics">
+    <div class="dashboard-title">
+        <h2 class="section-heading">MODEL PERFORMANCE</h2>
+        <p class="section-subtitle">Evaluation metrics supplied by the backend.</p>
+    </div>
+    {% set accuracy = safe_metrics.get('accuracy', safe_metrics.get('Accuracy')) %}
+    {% set precision = safe_metrics.get('precision', safe_metrics.get('Precision')) %}
+    {% set recall = safe_metrics.get('recall', safe_metrics.get('Recall')) %}
+    {% set f1 = safe_metrics.get('f1_score', safe_metrics.get('f1', safe_metrics.get('f1-score', safe_metrics.get('F1-score')))) %}
+    <div class="metrics-grid">
+        {% for metric_name, metric_value in [('Accuracy', accuracy), ('Precision', precision), ('Recall', recall), ('F1 Score', f1)] %}
+        <article class="metric-box">
+            <div class="metric-value">
+                {% if metric_value is not none %}
+                    {% if metric_value|float <= 1 %}
+                        {{ (metric_value|float * 100)|round(2) }}%
+                    {% else %}
+                        {{ metric_value|float|round(2) }}%
+                    {% endif %}
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+            <div class="metric-label">{{ metric_name }}</div>
+        </article>
+        {% endfor %}
+    </div>
+    <p class="model-note">
+        Metrics are shown only when available from the backend. They do not guarantee
+        that every new message will be classified correctly.
+        {% if metrics_source is defined and metrics_source %}
+            Source: {{ metrics_source }}.
+        {% elif accuracy is none and precision is none and recall is none and f1 is none %}
+            No metrics file was found. Expected: reports/model_metrics.json.
+        {% endif %}
+        {% if model_available is defined %}
+            Model status: {{ 'READY' if model_available else 'CHECK MODEL' }}.
+        {% endif %}
+    </p>
+</section>
+
+<section class="feature-row" aria-label="Scanner information">
+    <article class="feature">
+        <div class="feature-icon" aria-hidden="true">⌕</div>
+        <div><h3>RISK INDICATORS</h3><p>Review warning cues that may help identify suspicious message patterns.</p></div>
+    </article>
+    <article class="feature">
+        <div class="feature-icon" aria-hidden="true">◈</div>
+        <div><h3>ML-POWERED ANALYSIS</h3><p>A trained machine-learning model analyzes message text and returns a prediction.</p></div>
+    </article>
+    <article class="feature">
+        <div class="feature-icon" aria-hidden="true">⛨</div>
+        <div><h3>THINK BEFORE YOU TRUST</h3><p>Inspect unexpected requests and verify them using an official contact method.</p></div>
+    </article>
+</section>
+</main>
+
+<footer>
+    <div class="footer-colors" aria-hidden="true"><span class="green"></span><span class="green-light"></span><span class="red-light"></span><span class="red"></span></div>
+    <strong>PHISHSHIFT</strong> · MESSAGE RISK SCANNER<br>
+    An educational cybersecurity project · Built for safer digital communication<br>
+    Predictions are not guarantees. Always verify suspicious messages independently.
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Data from Flask, read by the script below (keeps Jinja out of the JavaScript) -->
+<div id="dashboardData" hidden
+     data-stats='{{ safe_stats|tojson }}'
+     data-flashed='{{ get_flashed_messages()|tojson }}'></div>
+
+<script>
+"use strict";
+
+const root = document.documentElement;
+const themeToggle = document.getElementById("themeToggle");
+const themeIcon = document.getElementById("themeIcon");
+const themeText = document.getElementById("themeText");
+
+function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+    themeText.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+    themeToggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    try { localStorage.setItem("phishshift-theme", theme); } catch (error) {}
+}
+
+let savedTheme = "light";
+try { savedTheme = localStorage.getItem("phishshift-theme") || "light"; } catch (error) {}
+applyTheme(savedTheme);
+
+themeToggle.addEventListener("click", function () {
+    applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+});
+
+const messageInput = document.getElementById("message");
+const charCount = document.getElementById("charCount");
+const clearButton = document.getElementById("clearButton");
+const analyzeButton = document.getElementById("analyzeButton");
+const buttonText = document.getElementById("buttonText");
+const scannerForm = document.getElementById("scannerForm");
+const toast = document.getElementById("toast");
+
+function showToast(message, duration) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    window.setTimeout(function () { toast.classList.remove("show"); }, duration || 2600);
+}
+
+function updateCount() {
+    charCount.textContent = messageInput.value.length.toLocaleString() + " characters";
+}
+messageInput.addEventListener("input", updateCount);
+updateCount();
+
+clearButton.addEventListener("click", function () {
+    messageInput.value = "";
+    updateCount();
+    messageInput.focus();
+});
+
+const samples = {
+    phishing: "URGENT: Your account will be suspended today! Verify your password immediately at hxxps://account-check.invalid/login to avoid losing access. Do not ignore this warning.",
+    legitimate: "Hello team, our project review meeting is scheduled for tomorrow at 10 AM in the usual classroom. Please bring your project progress update. Contact the coordinator if you need to confirm the schedule. Thank you."
+};
+
+document.querySelectorAll("[data-sample]").forEach(function (button) {
+    button.addEventListener("click", function () {
+        const sample = samples[button.dataset.sample];
+        if (sample) {
+            messageInput.value = sample;
+            updateCount();
+            messageInput.focus();
+            showToast("Example message added. Click Analyze Message to scan it.");
+        }
+    });
+});
+
+scannerForm.addEventListener("submit", function (event) {
+    if (!messageInput.value.trim()) {
+        event.preventDefault();
+        showToast("Please enter a message first.");
+        messageInput.focus();
+        return;
+    }
+    analyzeButton.disabled = true;
+    buttonText.textContent = "ANALYZING MESSAGE...";
+});
+
+const riskMeter = document.getElementById("riskMeterFill");
+if (riskMeter) {
+    const score = Number(riskMeter.dataset.score);
+    const safeScore = Number.isFinite(score) ? Math.max(0, Math.min(100, score)) : 0;
+    riskMeter.style.width = safeScore + "%";
+}
+
+/* Values supplied by the Flask backend (read from data attributes) */
+let dashboardStats = {};
+let flashedMessages = [];
+
+try {
+    const dataElement = document.getElementById("dashboardData");
+    dashboardStats = JSON.parse(dataElement.dataset.stats || "{}");
+    flashedMessages = JSON.parse(dataElement.dataset.flashed || "[]");
+} catch (error) {
+    dashboardStats = {};
+    flashedMessages = [];
+}
+
+function statNumber(key, fallbackId) {
+    const value = Number(dashboardStats[key]);
+    if (Number.isFinite(value)) return value;
+
+    const element = fallbackId ? document.getElementById(fallbackId) : null;
+    if (!element) return 0;
+    const parsed = Number(element.textContent.trim());
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function drawCharts() {
+    if (typeof Chart === "undefined") {
+        document.querySelectorAll(".chart-wrap").forEach(function (element) {
+            element.innerHTML = '<p class="empty-history">Charts could not load. Check your internet connection.</p>';
+        });
+        return;
+    }
+
+    const phishing = statNumber("phishing", "phishingCount");
+    const legitimate = statNumber("legitimate", "legitimateCount");
+    const uncertain = statNumber("uncertain", "uncertainCount");
+
+    const highRisk = statNumber("high", "");
+    const mediumRisk = statNumber("medium", "");
+    const lowRisk = statNumber("low", "");
+
+    const textColor = getComputedStyle(root).getPropertyValue("--muted").trim();
+    const gridColor = getComputedStyle(root).getPropertyValue("--border").trim();
+
+    const barCanvas = document.getElementById("scanChart");
+    if (barCanvas) {
+        new Chart(barCanvas, {
+            type: "bar",
+            data: {
+                labels: ["Phishing", "Legitimate", "Uncertain"],
+                datasets: [{
+                    data: [phishing, legitimate, uncertain],
+                    backgroundColor: ["#a31628", "#13845c", "#e6a817"],
+                    borderRadius: 8,
+                    maxBarThickness: 55
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: textColor }, grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0, color: textColor }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+
+    const doughnutCanvas = document.getElementById("riskChart");
+    if (doughnutCanvas) {
+        new Chart(doughnutCanvas, {
+            type: "doughnut",
+            data: {
+                labels: ["High risk", "Medium risk", "Low risk"],
+                datasets: [{
+                    data: [highRisk, mediumRisk, lowRisk],
+                    backgroundColor: ["#a31628", "#e6a817", "#13845c"],
+                    borderWidth: 0,
+                    hoverOffset: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "65%",
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: { color: textColor, padding: 18, usePointStyle: true }
+                    }
+                }
+            }
+        });
+    }
+}
+drawCharts();
+
+if (flashedMessages.length > 0) {
+    showToast(flashedMessages[0], 5000);
+}
+
+window.addEventListener("load", function () {
+    const results = document.getElementById("results");
+    if (results) {
+        results.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+});
+</script>
+</body>
+</html>

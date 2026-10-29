@@ -1,0 +1,41 @@
+{
+  "evaluation_type": "derived_similarity_group_holdout",
+  "note": "Groups are derived from text similarity and are not verified real-world campaign IDs. Results must not be described as verified campaign-separated performance.",
+  "dataset": "G:\\phishshift\\data\\phishshift_prepared.csv",
+  "text_column": "body_text",
+  "label_column": "label",
+  "group_column": "derived_template_group",
+  "random_state": 42,
+  "test_size": 0.2,
+  "training_messages": 13909,
+  "test_messages": 3576,
+  "overlapping_groups": 0,
+  "models": {
+    "Logistic Regression": {
+      "accuracy": 0.9838,
+      "phishing_precision": 0.9774,
+      "phishing_recall": 0.9815,
+      "phishing_f1": 0.9794,
+      "false_positive_rate": 0.0148,
+      "confusion_matrix": {
+        "true_negative": 2136,
+        "false_positive": 32,
+        "false_negative": 26,
+        "true_positive": 1382
+      }
+    },
+    "Linear SVM": {
+      "accuracy": 0.9877,
+      "phishing_precision": 0.9871,
+      "phishing_recall": 0.9815,
+      "phishing_f1": 0.9843,
+      "false_positive_rate": 0.0083,
+      "confusion_matrix": {
+        "true_negative": 2150,
+        "false_positive": 18,
+        "false_negative": 26,
+        "true_positive": 1382
+      }
+    }
+  }
+}

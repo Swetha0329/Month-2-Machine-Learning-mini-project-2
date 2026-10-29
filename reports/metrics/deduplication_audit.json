@@ -1,0 +1,17 @@
+{
+  "source_file": "data\\phishshift_dataset.csv",
+  "prepared_file": "data\\phishshift_prepared.csv",
+  "source_rows": 17522,
+  "prepared_rows": 17485,
+  "rows_removed_during_preparation": 37,
+  "prepared_normalized_text_duplicates": 0,
+  "template_group_rows": 17485,
+  "unique_derived_template_groups": 15050,
+  "groups_are_verified_campaigns": false,
+  "limitations": [
+    "Exact and normalized duplicate removal is performed before model splitting.",
+    "Near-duplicate grouping uses TF-IDF nearest neighbours and checks at most 10 neighbours per message.",
+    "Derived similarity groups are not verified campaign identifiers.",
+    "The training split prevents derived groups from overlapping, but this does not prove campaign-separated generalization."
+  ]
+}

@@ -1,0 +1,77 @@
+{
+    "logistic_regression": {
+        "accuracy": 0.9840604026845637,
+        "precision_phishing": 0.9780608634111819,
+        "recall_phishing": 0.9815340909090909,
+        "f1_phishing": 0.9797943991492378,
+        "confusion_matrix_labels": [
+            "legitimate",
+            "phishing"
+        ],
+        "confusion_matrix": [
+            [
+                2137,
+                31
+            ],
+            [
+                26,
+                1382
+            ]
+        ],
+        "training_messages": 13909,
+        "testing_messages": 3576,
+        "training_groups": 12040,
+        "testing_groups": 3010,
+        "evaluation_type": "derived_similarity_group_split"
+    },
+    "linear_svm": {
+        "accuracy": 0.9876957494407159,
+        "precision_phishing": 0.9871428571428571,
+        "recall_phishing": 0.9815340909090909,
+        "f1_phishing": 0.9843304843304843,
+        "confusion_matrix_labels": [
+            "legitimate",
+            "phishing"
+        ],
+        "confusion_matrix": [
+            [
+                2150,
+                18
+            ],
+            [
+                26,
+                1382
+            ]
+        ],
+        "training_messages": 13909,
+        "testing_messages": 3576,
+        "training_groups": 12040,
+        "testing_groups": 3010,
+        "evaluation_type": "derived_similarity_group_split"
+    },
+    "random_forest": {
+        "accuracy": 0.9717561521252797,
+        "precision_phishing": 0.9644633972992182,
+        "recall_phishing": 0.9637784090909091,
+        "f1_phishing": 0.9641207815275311,
+        "confusion_matrix_labels": [
+            "legitimate",
+            "phishing"
+        ],
+        "confusion_matrix": [
+            [
+                2118,
+                50
+            ],
+            [
+                51,
+                1357
+            ]
+        ],
+        "training_messages": 13909,
+        "testing_messages": 3576,
+        "training_groups": 12040,
+        "testing_groups": 3010,
+        "evaluation_type": "derived_similarity_group_split"
+    }
+}
